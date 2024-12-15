@@ -1,0 +1,1 @@
+# An-lise-de-Falhas-na-Linha-de-Produ-o---STEM-UEA
