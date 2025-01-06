@@ -1,0 +1,6 @@
+train: datasets/train
+val: datasets/val
+
+nc: 2
+
+names: ['lata_normal', 'lata_amassada']
