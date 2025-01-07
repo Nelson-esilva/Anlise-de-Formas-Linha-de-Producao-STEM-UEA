@@ -2,7 +2,7 @@ import torch
 import cv2
 
 # Carrega o modelo YOLOv5 personalizado treinado com seus dados
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+model = torch.hub.load('ultralytics/yolov5', 'custom', path=r'C:/Users/Nelso/OneDrive/Área de Trabalho/Projetos/STEM/Projeto Linha de Produção/Software_Deteccao/An-lise-de-Falhas-na-Linha-de-Produ-o---STEM-UEA/yolov5/runs/train/exp4/weights/best.pt')
 
   # Substitua 'best.pt' pelo seu modelo treinado
 
@@ -38,7 +38,7 @@ def detect_cans(frame):
     return frame
 
 # Processa um vídeo
-video_path = "./videos/lata_video.mp4"  # Assume que a pasta 'videos' está no mesmo diretório do script
+video_path = "./videos/lata_video2.mp4"  # Assume que a pasta 'videos' está no mesmo diretório do script
 
 cap = cv2.VideoCapture(video_path)
 
