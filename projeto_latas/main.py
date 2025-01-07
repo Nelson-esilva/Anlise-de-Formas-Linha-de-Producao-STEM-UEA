@@ -1,32 +1,45 @@
 import torch
 import cv2
 
-# Carrega o modelo YOLOv5 pré-treinado (ou treinado com dados de latas)
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='best.pt')  # Substitua 'best.pt' pelo seu modelo treinado
+# Carrega o modelo YOLOv5 personalizado treinado com seus dados
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+
+  # Substitua 'best.pt' pelo seu modelo treinado
 
 def detect_cans(frame):
     """Detecta latas em um frame usando YOLOv5"""
     
-    # Redimensiona o frame para facilitar o processamento
+    # Redimensiona o frame para o tamanho esperado pelo modelo (640x640 é o tamanho padrão para YOLOv5)
     frame_resized = cv2.resize(frame, (640, 640))
     
-    # Faz a detecção com YOLO
-    results = model(frame_resized)
+    # Converte a imagem para o formato adequado para o YOLOv5 (RGB)
+    img = frame_resized[..., ::-1]  # Converte BGR para RGB
+    
+    # Faz a detecção com YOLOv5
+    results = model(img)  # O modelo retorna um objeto com as detecções
     
     # Extrai as informações das detecções
-    detections = results.xyxy[0].numpy()  # Coordenadas da caixa delimitadora
+    detections = results.xyxy[0].cpu().numpy()  # Coordenadas da caixa delimitadora no formato (x1, y1, x2, y2, conf, cls)
     
     for det in detections:
-        x1, y1, x2, y2, conf, cls = det  # Coordenadas, confiança, e classe
-        if conf > 0.5:  # Confiança mínima para considerar a detecção
+        x1, y1, x2, y2, conf, cls = det  # Coordenadas, confiança e classe
+        print(f"Classe: {cls}, Confiança: {conf}")
+        if conf > 0.1:  # Confiança mínima para considerar a detecção
             label = f"Lata: {conf:.2f}"
-            cv2.rectangle(frame_resized, (int(x1), int(y1)), (int(x2), int(y2)), (0, 255, 0), 2)
-            cv2.putText(frame_resized, label, (int(x1), int(y1) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            
+            # Redimensiona as coordenadas da caixa delimitadora para o tamanho original da imagem
+            x1, y1, x2, y2 = int(x1 * frame.shape[1] / 640), int(y1 * frame.shape[0] / 640), \
+                             int(x2 * frame.shape[1] / 640), int(y2 * frame.shape[0] / 640)
+            
+            # Desenha a caixa delimitadora e o rótulo na imagem
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
-    return frame_resized
+    return frame
 
 # Processa um vídeo
-video_path = "videos/lata_video.mp4"
+video_path = "./videos/lata_video.mp4"  # Assume que a pasta 'videos' está no mesmo diretório do script
+
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
