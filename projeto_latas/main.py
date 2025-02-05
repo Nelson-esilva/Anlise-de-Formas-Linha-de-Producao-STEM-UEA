@@ -3,7 +3,7 @@ import cv2
 from ultralytics import YOLO
 
 # Caminho para o modelo treinado no YOLOv8
-model_path = r"C:/Users/Nelso/OneDrive/Área de Trabalho/Projetos/STEM/Projeto Linha de Produção/Software_Deteccao/An-lise-de-Falhas-na-Linha-de-Produ-o---STEM-UEA/runs/detect/train2/weights/best.pt"
+model_path = r"C:/Users/Nelso/OneDrive/Documentos/Projetos/STEM/projetoSTEM-producao/Software_Deteccao/Analise-de-Falhas-na-Linha-de-Producao-STEM-UEA/runs/detect/train2/weights/best.pt"
 
 # Carregar o modelo treinado
 model = YOLO(model_path)
@@ -51,7 +51,7 @@ def detect_cans(frame):
 
 
 # Processa um vídeo
-video_path = "./videos/lata_video.mp4"  # Assume que a pasta 'videos' está no mesmo diretório do script
+video_path = "./videos/teste1.mp4"  # Assume que a pasta 'videos' está no mesmo diretório do script
 
 cap = cv2.VideoCapture(video_path)
 
